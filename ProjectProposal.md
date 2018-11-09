@@ -20,6 +20,14 @@ Gretchen Rice and Siena Okuno
 - Maze  
 - 2 robots have to find each other in maze  
 
+commnication and map not focuse, overlaying/combining maps would be reasonable  
+have rough guess of initia location, as get more info guess inital points, try to overlap, see what happens. Keep trying idfferent local minima, which was th best found. Try a couple differnt algorithms for alligning the maps.  
+Will want tight, single maze quarters  
+Matching lidar scans  
+ROS nodes exist for scan matching <- writing this part from scratch  
+Corners best  
+
+
 
 
 
@@ -32,3 +40,7 @@ Gretchen Rice and Siena Okuno
 # Team Expectations  
 - Transparency in the work being done  
 - Pair programming and task division  
+
+# Algorithms
+- Iterative closest point
+- Hector SLAM uses scan alignment , taking laser scans, stitching together with old map
