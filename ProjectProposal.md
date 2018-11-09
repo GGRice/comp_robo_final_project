@@ -28,10 +28,10 @@ Meetings: Wednesdays 7-9, Saturdays 11-1
 11/10 *11-12*  
 11/13: *Research into other algorithms, pick the one we want to try first*   
 11/14 *7-9*  
-11/16: *Pick mapping algorithm and communication method, start work on these. Have general code architecture*  
+11/16: *Pick mapping algorithm and communication method, start work on these. Have general code architecture*    
 **THANKSGIVING BREAK**    
 11/27: *Finish mapping and communication code, have it working. Start work on overlaying code*  
-11/28 *7-9*
+11/28 *7-9*  
 11/30: *Work on overlaying code*   
 12/1 *11-1*  
 12/4:  *MVP complete*  
