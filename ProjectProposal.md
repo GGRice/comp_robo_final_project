@@ -33,20 +33,20 @@ Ideally, we would want our robot to be able to create a shared map using two dif
 
 # Timeline
 Meetings: Wednesdays 7-9, Saturdays 11-1  
-11/10  
+11/10 11-12
 11/13: Research into other algorithms, pick the one we want to try first   
-11/14  
+11/14 7-9  
 11/16: Pick mapping algorithm and communication method, start work on these. Have general code architecture  
 **THANKSGIVING BREAK**    
 11/27: Finish mapping and communication code, have it working. Start work on overlaying code  
-11/28
+11/28 7-9
 11/30: Work on overlaying code   
-12/1  
+12/1 11-1  
 12/4:  MVP complete  
-12/5  
-12/7:  Work toward stretch goal, catch up if theings haven't been working    
-12/8  
-12/12  
+12/5 7-9  
+12/7: Work toward stretch goal, catch up if theings haven't been working    
+12/8 11-1     
+12/12 7-9  
 12/14: [FINALS PERIOD] 
 
 # Goals
