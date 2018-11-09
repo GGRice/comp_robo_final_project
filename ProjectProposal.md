@@ -4,8 +4,6 @@
 
 
 # Main Idea:  
-Picture this: 1 map, 1 maze, 1+1=2, 2 robots, 2+1=3, 3 is a triangle, illuminati.
-
 We will have one physical 3D maze with many sharp corners that is fairly small. Two Neatos will start at different points in the maze with no information as to their location or the other robot's location. From there, they with individually map out their surrounding with lidar and relay the information to one common computing source. After a decent map is constructed by each robot as they move through the maze, they will attempt to locate one another by overlaying the maps.  
 Our project will be focusing on the overlaying and comparing of the map scans and not the communication or mapping abilities aspects of the project.  
 
