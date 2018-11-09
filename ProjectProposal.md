@@ -23,21 +23,21 @@ Ideally, we would want our robot to be able to create a shared map using two dif
 
 # Timeline
 Meetings: Wednesdays 7-9, Saturdays 11-1  
-11/10 *11-12 Find algorithms*  
-11/13: *Pick the algorithm we want to try first, look into mapping and communication methods, create general code architecture*   
-11/14 *7-9 Start mapping and communication code, make a maze*  
-11/16: *Continue working on mapping and communicating, hopefully finish before Thanksgiving break*    
+11/10: *(11-12) Find algorithms*  
+11/13: *(class) Pick the algorithm we want to try first, look into mapping and communication methods, create general code architecture*   
+11/14: *(7-9) Start mapping and communication code, make a maze*  
+11/16: *(class) Continue working on mapping and communicating, hopefully finish before Thanksgiving break*    
 **THANKSGIVING BREAK**    
-11/27: *Finish mapping and communication code, have it working. Start work on overlaying code*  
-11/28 *7-9*  
-11/30: *Work on overlaying code*   
-12/1 *11-1*  
-12/4:  *MVP complete*  
-12/5 *7-9*  
-12/7: *Work toward stretch goal, catch up if theings haven't been working*    
-12/8 *11-1*     
-12/12 *7-9*  
-12/14: [FINALS PERIOD] 
+11/27: *(class) Finish mapping and communication code, have it working. Start work on overlaying code*  
+11/28: *(7-9)*  
+11/30: *(class) Work on overlaying code*   
+12/1: *(11-1)*  
+12/4:  *(class) MVP complete*  
+12/5: *(7-9)*  
+12/7: *(class) Work toward stretch goal, catch up if theings haven't been working*    
+12/8: *(11-1)*     
+12/12: *(7-9)*  
+12/14: *(class) [FINALS PERIOD]* 
 
 # Goals
 ### Project Goals  
