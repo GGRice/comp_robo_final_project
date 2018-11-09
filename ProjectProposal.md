@@ -1,9 +1,3 @@
-
-- Outline a rough timeline for the major milestones of your project.  This will mainly be useful to refer back to as we move through the project.  
-- What do you view as the biggest risks to you being successful on this project?  
-- [This section will be completed in class on 11/9] Given each of your YOGAs, in what ways is this project well-aligned with these goals, and in what ways is it misaligned?  If there are ways in which it is not well-aligned, please provide a potential strategy for bringing the project and your learning goals into better alignment.  There should be an individual section for each person on the team addressing the fit between the YOGA and the project topic.  
-
-
 # Two Rats in a Maze
 #### *A Project on Localization using Scan Matching*
 ###### The Rats: Gretchen Rice and Siena Okuno  
