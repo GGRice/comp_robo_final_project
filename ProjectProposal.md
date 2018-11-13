@@ -19,7 +19,10 @@ Ideally, we would want our robot to be able to create a shared map using two dif
 - Iterative closest point  
 
 ## Algorithms to Use for Mapping
-- Hector SLAM: Uses scan alignment to stitch together scan readings as moving throug ha map  
+- Hector SLAM: Uses scan alignment to stitch together scan readings as moving through a map  
+  - Seems to create map by comparing readings to map, make our own Hector SLAM?
+- Extended Kalman filter: standard form of SLAM
+- G-Mapping: Another SLAM algorithm, more computationally heavy than Hector, has particle filter in it
 
 # Timeline
 Meetings: Wednesdays 7-9, Saturdays 11-1  
