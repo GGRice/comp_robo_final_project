@@ -10,3 +10,11 @@
 
 
 # Siena
+1. Create a project that is currently of importance to the field of robotics.  
+  I feel like a lot of Olin projects are technically challenging, but sometimes they are not very relevant to real life or represent already solved problems. I want to make something that is interesting to me without sacrificing the real-world aspect. Gretchen and I both agree on this goal so we will tailor our project to our needs this way to focus on matching maps with large variances in their orientations.
+
+2. Understanding all components of the code: The Why and How.  
+  In previous projects, my teams did a good job of splitting up work but not a good job of communicating what those different parts of the project did. This time I want to focus on understanding the code and all the reasoning behind the design of our project. For this I plan to communicate with my partner a lot more and try to work on big items during meetings, even if this means that we are working next to each other on different parts of the project. This will slow down work a little bit, but hopefully it will encourage more learning.
+
+3. Make a working MVP by the end of this project.  
+  It is a little disheartening when projects don’t work and while I appreciate the chance to learn and do something challenging, I want to make sure that this project is something I can talk about as “yes, we did this” instead of “well, we tried.” I think a good way to achieve this is to work on the previous goal as well as get started early and keep working hard.
