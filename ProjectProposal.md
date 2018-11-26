@@ -51,3 +51,8 @@ Meetings: Wednesdays 7-9, Saturdays 11-1
 ### Team Expectations  
 - Transparency in the work being done  
 - Pair programming and task division  
+
+# Things to Read
+- ICP slides: https://cs.gmu.edu/~kosecka/cs685/cs685-icp.pdf  
+- SCD papre: https://igl.ethz.ch/projects/ARAP/svd_rot.pdf  
+
