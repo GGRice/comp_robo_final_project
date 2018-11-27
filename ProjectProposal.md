@@ -52,8 +52,11 @@ Meetings: Wednesdays 7-9, Saturdays 11-1
 - Transparency in the work being done  
 - Pair programming and task division  
 
-# Things to Read
+# Things Read or Watched
 - ICP slides: https://cs.gmu.edu/~kosecka/cs685/cs685-icp.pdf  
 - SCD papre: https://igl.ethz.ch/projects/ARAP/svd_rot.pdf  
-- Hector SLAM: https://l.messenger.com/l.php?u=https%3A%2F%2Fcdn.fbsbx.com%2Fv%2Ft59.2708-21%2F46969079_258992578304653_6392052041107111936_n.pdf%2F06106777.pdf%3F_nc_cat%3D103%26_nc_ht%3Dcdn.fbsbx.com%26oh%3D8eded0cad0772571a8095c6af2d149ae%26oe%3D5BFF7B4A%26dl%3D1&h=AT17rZz-f7Bt7qCx8DVNq65xxZ1p62S0pOoModQoUmNxQoAxEqOGuWH8IIx4TOmeBAuy9CenW67iCmNgu1FcN25p0U4zCm-dDdATF5jPHPCpVCFcmlR4yj9ZAK0OakYMgtNOI-5Y9QkyKw  
+- Hector SLAM: https://l.messenger.com/l.php?u=https%3A%2F%2Fcdn.fbsbx.com%2Fv%2Ft59.2708-21%2F46969079_258992578304653_6392052041107111936_n.pdf%2F06106777.pdf%3F_nc_cat%3D103%26_nc_ht%3Dcdn.fbsbx.com%26oh%3D8eded0cad0772571a8095c6af2d149ae%26oe%3D5BFF7B4A%26dl%3D1&h=AT17rZz-f7Bt7qCx8DVNq65xxZ1p62S0pOoModQoUmNxQoAxEqOGuWH8IIx4TOmeBAuy9CenW67iCmNgu1FcN25p0U4zCm-dDdATF5jPHPCpVCFcmlR4yj9ZAK0OakYMgtNOI-5Y9QkyKw 
+- ICP Video: https://www.youtube.com/watch?v=tvlAjCCoVE8
+- Good Overview of ICP Steps: https://www.youtube.com/watch?v=Tn0JOVpFWzM 
+
 
