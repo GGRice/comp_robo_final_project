@@ -4,7 +4,7 @@ import rospy
 '''
 how to launch:
 roscore
-roslaunch neato_node bring_minimal.launch host:=IP_ADDRESS_OF_YOUR_ROBOT
+roslaunch neato_node bringup_minimal.launch host:=IP_ADDRESS_OF_YOUR_ROBOT
 rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 rosbag record -a -x ".*map$" -o bag- file-name
 roslaunch neato_2dnav hector_mapping_neato.launch
