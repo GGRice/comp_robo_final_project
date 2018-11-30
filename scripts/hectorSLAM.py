@@ -9,7 +9,7 @@ rosrun teleop_twist_keyboard teleop_twist_keyboard.py
 rosbag record -a -x ".*map$" -o bag- file-name
 roslaunch neato_2dnav hector_mapping_neato.launch
 move around
-rosrun map_server map_saver -f ~/map-name (saves the map)
+rosrun map_server map_saver -f map-name (saves the map)
 end hector_mapping
 
 
