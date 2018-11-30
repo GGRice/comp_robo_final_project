@@ -1,1 +1,2 @@
-# comp_robo_final_project
+# Maze Scanner
+Website: https://sienaokuno.wixsite.com/mazescanner
