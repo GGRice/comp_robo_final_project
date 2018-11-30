@@ -29,8 +29,8 @@ def arrangePoints(matrix):
         array_points.append((x[i],y[i]))
     return array_points
 
-def matchPoints(fixed, moving)
-
+def matchPoints(fixed, moving):
+    pass
 
 fixed = findPoints('room1.jpg')
 fixed_array = arrangePoints(fixed)
