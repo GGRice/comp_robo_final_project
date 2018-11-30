@@ -13,5 +13,5 @@ rosrun map_server map_saver -f map-name (saves the map)
 end hector_mapping
 
 
-roslaunch com_robo_final_project test_bagfile.launch map_name:=map-name use_builtin:=true
+roslaunch comp_robo_final_project test_bagfile.launch map_name:=map-name use_builtin:=true
 '''
