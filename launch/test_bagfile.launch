@@ -1,0 +1,28 @@
+<launch>
+  <!-- Map server -->
+  <param name="use_sim_time" value="true"/>
+  <arg name="use_builtin" default="false"/>
+  <arg name="scan_topic" default="stable_scan"/>
+  <arg name="map_name"/>
+
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find comp_robo_final_project)/maps/$(arg map_name).yaml"/>
+  <node name="bag_player" pkg="rosbag" type="play" args="$(find comp_robo_final_project)/bags/$(arg map_name).bag --clock --pause" output="screen"/>
+
+  <include file="$(find neato_node)/launch/set_urdf.launch"/>
+
+ <group if="$(arg use_builtin)">
+  <include file="$(find neato_2dnav)/launch/includes/amcl.launch.xml">
+    <arg name="scan_topic" value="$(arg scan_topic)"/>
+    <arg name="initial_pose_x" value="0.0"/>
+    <arg name="initial_pose_y" value="0.0"/>
+    <arg name="initial_pose_a" value="0.0"/>
+  </include>
+ </group>
+
+ <group unless="$(arg use_builtin)">
+ <!-- if using builtin: type=pf, if using our own: type=hectorSLAM.py -->
+  <!-- <node name="pf" pkg="comp_robo_final_project" type="hectorSLAM.py" output="screen"> 
+    <remap from="scan" to="$(arg scan_topic)"/>
+  </node> -->
+</group>
+</launch>
