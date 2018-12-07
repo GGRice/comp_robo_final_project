@@ -56,7 +56,7 @@ def matchPoints(fixed,moving,fixed_array,moving_array,a=0):#, moving):
         idx = idx == X.min()
         A[idx[0], idx[1]]
 
-        
+
         '''
         if not (fixed_array.includes([x1,y1])):
             if not (fixed_array.includes([x1-1,y1])):
@@ -77,9 +77,10 @@ def matchPoints(fixed,moving,fixed_array,moving_array,a=0):#, moving):
 
 
 
-imgfixed,fixed = findPoints('room1.jpg')
+imgfixed,fixed = findPoints('maze1.pgm')
+showPoints(imgfixed,fixed)
 fixed_array, fixedzeros = arrangePoints(fixed)
-imgmoving,moving = findPoints('room2.jpg')
-moving_array, fixedzeros = arrangePoints(moving)
+#imgmoving,moving = findPoints('room2.jpg')
+#moving_array, fixedzeros = arrangePoints(moving)
 
-matchPoints(fixed, moving,fixed_array,moving_array)
+#matchPoints(fixed, moving,fixed_array,moving_array)
