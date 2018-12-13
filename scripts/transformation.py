@@ -8,97 +8,157 @@
 import numpy as np
 import scipy.stats
 from pylab import *
+from PIL import Image
+import matplotlib.pyplot as plt
 import random
 import rospy
 import cv2
 
 def image(img):
-    adress = '../'
+    #adress = '../'
     return cv2.imread(img, 0)
 
 #np.matrix.T returns the transpose of the matrix
 
 def T( x, T0, T1, k=1.0 ):
     # apply an affine transformation to `x`
-    y = x * T0.T #Y is almost always 'x' so multiply Y by the trnaspose of the transformation (translation,rotation,scaling) matrix
-    #print(y[:,0])
-    #print(y.size)
+
     #print(T1)
-    #print(y[:,0].size)
-    #y[:,0] += -1
-    #print(y[:,0])
-    y[:,0] += T1[0]
-    y[:,1] += T1[1]
+
+    y = x * T0.T #Y is almost always 'x' so multiply Y by the transpose of the transformation (translation,rotation,scaling) matrix
+    y[:,0] += T1[0,0]
+    y[:,1] += T1[1,0]
     return y*k
 
-def translate( X, Y ):
-    # translate to align the centers of mass
+def translate( points ):
+    xchange, ychange = com(points)
 
-    #finds the center of mass of the maps
-    #returns an array with the same mean values in it
-    mx = np.mean( X, axis=0 ).T
-    my = np.mean( Y, axis=0 ).T
+    for i in points:
+        print(i[0][0])
+        i[0][0] = i[0][0] + xchange
+        i[0][1] = i[0][1] + ychange
 
-    #finds the difference between the com
-    translation = mx - my
+    print(points)
+    return points
 
-    #finds length of the image matrix
-    t = int(np.sqrt(Y.size))
 
-    #creates a translation matrix with length of image
-    I = np.matrix( np.eye( t ) )
-    #uses translation matrix and com diff to apply the transformation
-    Yp = T( Y, I, translation )
-    return Yp
-    
-    #return errorfct( X, Yp ), translation #returns the error between the first and translated second map and returns the com difference
-
-def rot( X, Y, angle=-1 ):
+def rot( X, Y, angle=0 ):
     # perform a random rotation
-    if angle == -1:
-        theta = scipy.stats.uniform( 0.0, 2.0*np.pi ).rvs() #generates a random angle
-    else:
-        theta = angle
+    theta = angle
 
     c = np.cos( theta )
     s = np.sin( theta )
     rotation = np.matrix( [[c,-s],[s,c]] ) #creates the roatation matrix
+
     Z = np.matrix( np.zeros((2,1)) ) #creates a matrix full of 0s
+
     Yp = T( Y, rotation, Z ) # uses the rotation matrix and the zero matrix to apply the transformation
     return Yp
-    #return errorfct( X, Yp ), rotation #returns the error between the first and rotated second map as well as the roation matrix
 
-def scale( X, Y, scale = 0 ):
-    # perform a random scaling
-    if scale == 0:
-        k = scipy.stats.uniform( 0.5, 1.0 ).rvs() #generates random scaling value
-    else:
-        k = scale
+#From cornerfinder
+def findPoints(filename):
+    #TODO: fix long distance noise being picked
+    #img = cv2.imread(filename)
+    img = filename
+    #gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    gray = np.float32(img)
+    dst = cv2.cornerHarris(gray,2,3,0.04)
+    #result is dilated for marking the corners, not important
+    dst = cv2.dilate(dst,None)
+    return img,dst
 
-    scaling = k * np.matrix( np.eye(2) ) #created scaling matrix full of zeros and k on the diagonal
-    Z = np.matrix( np.zeros((2,1)) ) #creates zero matrix
-    Yp = T( Y, scaling, Z ) #uses the scaling matrix and zero matrix to apply the transformation
-    return Yp
-    #return errorfct( X, Yp ), scaling #returns the error between the first and scaled second matrix and returns the scaling matrix
 
+def arrangePoints(matrix):
+    #finding nonzeros
+    array_points = []
+    matrix[matrix<=0.01*matrix.max()]=0
+    x,y = np.where(matrix > 0.01*matrix.max())
+    for i in range(0,len(x)):
+        array_points.append((x[i],y[i]))
+    return array_points, matrix
+
+
+def apply_trans_to_points(trans, fixed_array1, fixed_array2):
+    transformed = []
+    for i in range(0,len(fixed_array2)-1):
+        point1 = fixed_array1[i]
+        point2 = fixed_array2[i]
+
+        if trans == 'rotate':
+            changed = rot(point1, point2, np.pi/2)
+        elif trans == 'translate':
+            changed = translate(point1, point2)
+        #print(rotated[0])
+        x = int(changed[0,0])
+        y = int(changed[0, 1])
+        transformed.append((x,y))
+    return transformed
+
+def show_img(name, img):
+    cv2.imshow(name, img)
+    if cv2.waitKey(0) & 0xff == 27:
+        cv2.destroyAllWindows()
+
+def com(points):
+    xdiff = []
+    ydiff = []
+    for i in points:
+        xdiff.append(i[0][0]-i[1][0])
+        ydiff.append(i[0][1]-i[1][1])
+
+    x_mean = np.mean(xdiff)
+    y_mean = np.mean(ydiff)
+
+    return x_mean, y_mean
+
+
+a = [[[1,2],[1,3]],[[3,4],[4,5]]]
+
+
+translate(a)
+
+#show full array in printout
+#np.set_printoptions(threshold=np.nan)
 
 m1 = image('maze1.jpg')
 m2 = image('maze1_2.pgm')
 
-print(m1.size)
-print(m2.size)
 
 crop_img1 = m1[920:1120, 920:1120]
 crop_img2 = m2[920:1120, 920:1120]
-#print(crop_img1)
-print(crop_img2.shape)
-'''
-cv2.imshow('maze 2', crop_img2)
-if cv2.waitKey(0) & 0xff == 27:
-    cv2.destroyAllWindows()
-'''
 
-trans = translate(crop_img1, crop_img2)
-cv2.imshow('translated', trans)
-if cv2.waitKey(0) & 0xff == 27:
-    cv2.destroyAllWindows()
+imgfixed1,fixed1 = findPoints(crop_img1)
+fixed_array1, fixedzeros1 = arrangePoints(fixed1)
+
+imgfixed2,fixed2 = findPoints(crop_img2)
+fixed_array2, fixedzeros2 = arrangePoints(fixed2)
+
+
+type = 'rotate' #rotate or translate
+transf = apply_trans_to_points(type,fixed_array1, fixed_array2)
+changed_img = np.ones((len(fixedzeros2), len(fixedzeros2[0])), np.uint8)
+changed_img[:] = 255
+
+
+for index in transf:
+    changed_img[index[0], index[1]] = 0
+
+#print(changed_img)
+
+
+
+
+
+show_img(type, changed_img)
+
+# [[(x1,y1),(x2,y2)],[(x3,y3),(x4,y4)]]
+
+#find center of mazz of points, shift all points that amount
+
+'''
+X=[]
+Y=[]
+for i in points:
+    X.apend(i[0])
+    Y.append(i[1])
+'''
