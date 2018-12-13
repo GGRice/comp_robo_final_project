@@ -13,6 +13,7 @@ class PointMatching(object):
         self.fixedimg = []
         self.fixedmatrix = []
         self.fixedarray = []
+        self.fixed = []
 
         self.movingimg = []
         self.movingmatrix = []
@@ -92,16 +93,20 @@ class PointMatching(object):
         #searching non-zero points
         idx=np.zeros(self.numpoints)
         self.matches = np.zeros(self.numpoints, dtype='(2,2)int8')
+        print(self.numpoints)
         for i in range(0,self.numpoints):
+            print(i)
             #iterates through moving_array (new map)
             X = []
             for n in range(0,self.numpoints):
+                print(n)
                 #iterates through fixed_array (established map)
                 #TODO: remove from matching list
                 val = np.subtract(np.square(self.movingarray[i]),np.square(self.fixedarray[n]))    #gets hypotenuse
                 X.append(np.square(val[0]+val[1]))                                             #square of error distance appended to X
             idx[i] = int(np.where(X == min(X))[0][0]) #found closest interesting point
             self.matches[i] = [self.movingarray[i],self.fixedarray[int(idx[i])]]
+            print(self.matches[i])
 
 
     def run(self):
@@ -111,6 +116,9 @@ class PointMatching(object):
         self.arrangePoints('fixed')
         self.findPoints('maze1_2.pgm','moving')
         self.arrangePoints('moving')
+        self.limitPoints()
+        #NEVER CALLED LIMIT POINTS (I called above), so never set numpoints
+        #working through limitPoints errors now
         self.matchPoints()
         return self.matches
         #showPoints(imgfixed,fixed)
