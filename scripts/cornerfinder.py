@@ -9,6 +9,7 @@ import random
 def findPoints(filename):
     #TODO: fix long distance noise being picked
     img = cv2.imread(filename)
+    img = img[920:1120, 920:1120]
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     gray = np.float32(gray)
     dst = cv2.cornerHarris(gray,2,3,0.04)
@@ -35,6 +36,7 @@ def arrangePoints(matrix):
 
 def matchPoints(fixed,moving,fixed_array,moving_array,a=0):#, moving):
     #TODO: run for 100 cycles
+
     #same amount of points for array and matrix
     numpoints = min((np.count_nonzero(fixed)),(np.count_nonzero(moving)))
     if len(fixed_array)!=len(moving_array):
@@ -51,41 +53,30 @@ def matchPoints(fixed,moving,fixed_array,moving_array,a=0):#, moving):
             for i in range(0,len(moving_array_bad)):
                 moving[moving_array_bad[i]] = 0
 
-    #searching neighbors
+    #searching non-zero points
+    idx=np.zeros(numpoints)
+    matches = np.zeros(numpoints, dtype='(2,2)int8')
     for i in range(0,numpoints):
+        #iterates through moving_array (new map)
+        X= []
+        for n in range(0,numpoints):
+            #iterates through fixed_array (established map)
+            #TODO: remove from matching list
+            val = np.subtract(np.square(moving_array[i]),np.square(fixed_array[n]))    #gets hypotenuse
+            X.append(np.square(val[0]+val[1]))                                             #square of error distance appended to X
+        idx[i] = int((np.where(X == min(X))[0][0])) #found closest interesting point
+        matches[i] = [moving_array[i],fixed_array[int(idx[i])]]
+
+    return matches
 
 
-        X = np.square(fixed-[moving_array[i]])
-        idx = np.where(fixed_array.contains(moving_array[i]))
-        print(idx)
-        #idx = np.where(X == X.min())
-        #A[idx[0], idx[1]]
-        '''
-
-
-        if not (fixed_array.includes([x1,y1])):
-            if not (fixed_array.includes([x1-1,y1])):
-                if not (fixed_array.includes([x1-1,y1-1])):
-                    if not (fixed_array.includes([x1,y1-1])):
-                        if not (fixed_array.includes([x11,y1])):
-
-        hypo = (x1)**2 + (y)**2
-        '''
-
-
-    '''a+=1
-    if a<100:
-        matchPoints(fixed, a)
-    if a>=100:
-        print(a)
-        '''
 
 
 
 imgfixed,fixed = findPoints('maze1.pgm')
 #showPoints(imgfixed,fixed)
 fixed_array, fixedzeros = arrangePoints(fixed)
-imgmoving,moving = findPoints('room2.jpg')
+imgmoving,moving = findPoints('maze1_2.pgm')
 moving_array, fixedzeros = arrangePoints(moving)
 
 matchPoints(fixed, moving,fixed_array,moving_array)
