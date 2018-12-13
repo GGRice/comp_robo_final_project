@@ -13,7 +13,7 @@ class Vizualize(object):
         self.changed_img = None
 
 
-    def build_img():
+    def build_img(self):
         self.changed_img = np.ones(self.width, self.height, np.uint8)
         self.changed_img[:] = 255
 
@@ -21,7 +21,7 @@ class Vizualize(object):
             self.changed_img[index[0], index[1]] = 0
 
 
-    def show_img(name):
+    def show_img(self, name):
         cv2.imshow(name, self.changed_img)
         if cv2.waitKey(0) & 0xff == 27:
             cv2.destroyAllWindows()
