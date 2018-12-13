@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import random
 import rospy
 import cv2
+from cornerfinder import matchPoints
 
 def image(img):
     #adress = '../'
@@ -20,29 +21,17 @@ def image(img):
 
 #np.matrix.T returns the transpose of the matrix
 
-def T( x, T0, T1, k=1.0 ):
-    # apply an affine transformation to `x`
-
-    #print(T1)
-
-    y = x * T0.T #Y is almost always 'x' so multiply Y by the transpose of the transformation (translation,rotation,scaling) matrix
-    y[:,0] += T1[0,0]
-    y[:,1] += T1[1,0]
-    return y*k
-
-def translate( points ):
-    xchange, ychange = com(points)
-
-    for i in points:
-        print(i[0][0])
-        i[0][0] = i[0][0] + xchange
-        i[0][1] = i[0][1] + ychange
-
-    print(points)
-    return points
 
 
-def rot( X, Y, angle=0 ):
+def translate(move, xchange, ychange):
+
+    move[0] += xchange
+    move[1] += ychange
+
+    return Y
+
+
+def rot( move, angle=0 ):
     # perform a random rotation
     theta = angle
 
@@ -50,10 +39,13 @@ def rot( X, Y, angle=0 ):
     s = np.sin( theta )
     rotation = np.matrix( [[c,-s],[s,c]] ) #creates the roatation matrix
 
-    Z = np.matrix( np.zeros((2,1)) ) #creates a matrix full of 0s
+    moved = move * rotation.T #Y is almost always 'x' so multiply Y by the transpose of the transformation (translation,rotation,scaling) matrix
 
-    Yp = T( Y, rotation, Z ) # uses the rotation matrix and the zero matrix to apply the transformation
-    return Yp
+    x = moved[0,0]
+    y = moved[0,1]
+    r = [x,y]
+
+    return r
 
 #From cornerfinder
 def findPoints(filename):
@@ -78,19 +70,20 @@ def arrangePoints(matrix):
     return array_points, matrix
 
 
-def apply_trans_to_points(trans, fixed_array1, fixed_array2):
+def apply_trans_to_points(trans, a):
     transformed = []
-    for i in range(0,len(fixed_array2)-1):
-        point1 = fixed_array1[i]
-        point2 = fixed_array2[i]
+    xchange, ychange = com(points)
+    for i in range(0,len(a)-1):
+        #fix_point = a[i][0]
+        move_point = a[i][1]
 
         if trans == 'rotate':
-            changed = rot(point1, point2, np.pi/2)
+            changed = rot(move_point, np.pi/2)
         elif trans == 'translate':
-            changed = translate(point1, point2)
+            changed = translate(move_point, xchange, ychange)
         #print(rotated[0])
-        x = int(changed[0,0])
-        y = int(changed[0, 1])
+        x = int(changed[0])
+        y = int(changed[1])
         transformed.append((x,y))
     return transformed
 
@@ -111,11 +104,19 @@ def com(points):
 
     return x_mean, y_mean
 
+def build_img(transf, crop_img1):
+    changed_img = np.ones((len(crop_img1), len(crop_img1[0])), np.uint8)
+    changed_img[:] = 255
 
-a = [[[1,2],[1,3]],[[3,4],[4,5]]]
+    for index in transf:
+        changed_img[index[0], index[1]] = 0
+
+    return changed_img
 
 
-translate(a)
+
+
+
 
 #show full array in printout
 #np.set_printoptions(threshold=np.nan)
@@ -127,22 +128,21 @@ m2 = image('maze1_2.pgm')
 crop_img1 = m1[920:1120, 920:1120]
 crop_img2 = m2[920:1120, 920:1120]
 
-imgfixed1,fixed1 = findPoints(crop_img1)
-fixed_array1, fixedzeros1 = arrangePoints(fixed1)
+#show_img('map2',crop_img2)
 
-imgfixed2,fixed2 = findPoints(crop_img2)
-fixed_array2, fixedzeros2 = arrangePoints(fixed2)
+imgfixed,fixed = findPoints(crop_img1)
+fixed_array, fixedzeros = arrangePoints(fixed)
 
+imgmoving,moving = findPoints(crop_img2)
+moving_array, fixedzeros = arrangePoints(moving)
 
-type = 'rotate' #rotate or translate
-transf = apply_trans_to_points(type,fixed_array1, fixed_array2)
-changed_img = np.ones((len(fixedzeros2), len(fixedzeros2[0])), np.uint8)
-changed_img[:] = 255
+a = matchPoints(fixed, moving,fixed_array, moving_array)
 
 
-for index in transf:
-    changed_img[index[0], index[1]] = 0
+type = 'translate' #rotate or translate
+transf = apply_trans_to_points(type,a)
 
+changed_img = build_img(transf, crop_img1)
 #print(changed_img)
 
 
