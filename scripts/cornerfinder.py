@@ -66,8 +66,6 @@ def matchPoints(fixed,moving,fixed_array,moving_array,a=0):#, moving):
             X.append(np.square(val[0]+val[1]))                                             #square of error distance appended to X
         idx[i] = int((np.where(X == min(X))[0][0])) #found closest interesting point
         matches[i] = [moving_array[i],fixed_array[int(idx[i])]]
-    print(matches.min())
-    print(matches.max())
     return matches
 
 
