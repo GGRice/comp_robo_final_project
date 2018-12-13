@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-
 # Starter code for rotation taken from http://connor-johnson.com/2014/06/06/an-iterative-closest-point-algorithm/
-
 
 import numpy as np
 import scipy.stats
@@ -64,11 +62,13 @@ class Transformation(object):
 
     #finds avg distance between x points and y points
     def avgdist(self):
-        xdiff = []
-        ydiff = []
+        xdiff = np.array(0, dtype=np.int64)
+        ydiff = np.array(0, dtype=np.int64)
         for i in self.points:
-            xdiff.append(i[0][0]-i[1][0])
-            ydiff.append(i[0][1]-i[1][1])
+            np.append(xdiff,i[0][0]-i[1][0])
+            np.append(ydiff,i[0][1]-i[1][1])
+            #xdiff.append(i[0][0]-i[1][0])
+            #ydiff.append(i[0][1]-i[1][1])
 
         x_mean = np.mean(xdiff)
         y_mean = np.mean(ydiff)
@@ -92,7 +92,7 @@ class Visualize(object):
 
 
     def build_img(self):
-        self.changed_img = np.ones(self.width, self.height, np.uint8)
+        self.changed_img = np.ones((self.width, self.height), np.uint8)
         self.changed_img[:] = 255
 
         for index in self.to_be_img:
