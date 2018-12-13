@@ -30,7 +30,7 @@ def arrangePoints(matrix):
     matrix[matrix<=0.01*matrix.max()]=0
     x,y = np.where(matrix > 0.01*matrix.max())
     for i in range(0,len(x)):
-        array_points.append((x[i],y[i]))
+        array_points.append([x[i],y[i]])
     return array_points, matrix
 
 
@@ -66,6 +66,8 @@ def matchPoints(fixed,moving,fixed_array,moving_array,a=0):#, moving):
             X.append(np.square(val[0]+val[1]))                                             #square of error distance appended to X
         idx[i] = int((np.where(X == min(X))[0][0])) #found closest interesting point
         matches[i] = [moving_array[i],fixed_array[int(idx[i])]]
+    print(matches.min())
+    print(matches.max())
     return matches
 
 
@@ -78,4 +80,5 @@ fixed_array, fixedzeros = arrangePoints(fixed)
 imgmoving,moving = findPoints('maze1_2.pgm')
 moving_array, fixedzeros = arrangePoints(moving)
 
-matchPoints(fixed, moving,fixed_array,moving_array)
+a = matchPoints(fixed, moving,fixed_array,moving_array)
+print(a)
