@@ -34,9 +34,8 @@ def translate( points ):
     xchange, ychange = com(points)
 
     for i in points:
-        print(i[0][0])
-        i[0][0] = i[0][0] + xchange
-        i[0][1] = i[0][1] + ychange
+        i[1][0] = i[1][0] + xchange
+        i[1][1] = i[1][1] + ychange
 
     print(points)
     return points
@@ -111,11 +110,19 @@ def com(points):
 
     return x_mean, y_mean
 
+def build_img(transf):
+    changed_img = np.ones((len(fixedzeros2), len(fixedzeros2[0])), np.uint8)
+    changed_img[:] = 255
 
-a = [[[1,2],[1,3]],[[3,4],[4,5]]]
+    for index in transf:
+        changed_img[index[0], index[1]] = 0
+
+    return changed_img
 
 
-translate(a)
+
+
+
 
 #show full array in printout
 #np.set_printoptions(threshold=np.nan)
@@ -136,13 +143,8 @@ fixed_array2, fixedzeros2 = arrangePoints(fixed2)
 
 type = 'rotate' #rotate or translate
 transf = apply_trans_to_points(type,fixed_array1, fixed_array2)
-changed_img = np.ones((len(fixedzeros2), len(fixedzeros2[0])), np.uint8)
-changed_img[:] = 255
 
-
-for index in transf:
-    changed_img[index[0], index[1]] = 0
-
+changed_img = build_img(transf)
 #print(changed_img)
 
 
