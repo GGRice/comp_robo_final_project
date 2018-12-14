@@ -23,9 +23,14 @@ class PointMatching(object):
         self.matches = []
 #fix shit with passing into functions
 
-
+    ''' Run corner detection to find important points ''''
     def findPoints(self,filename, t):
-        #run corner detection
+        #want to created different variables for fixed or moving array
+
+        #make images black and white
+        #run Harris corener detection
+        #make the points in the matrix bigger
+
         if t == 'fixed':
             img = cv2.imread(filename)
             self.fixedimg = img[920:1120, 920:1120]
@@ -41,9 +46,8 @@ class PointMatching(object):
             matrix = cv2.cornerHarris(gray,2,3,0.04)
             self.movingmatrix = cv2.dilate(matrix,None)
 
-
+    ''' Visualize corner detection '''
     def showPoints(self,t):
-        #visualize corner detection
         if t == 'fixed':
             self.fixedimg[self.fixedmatrix>0.01*self.fixedmatrix.max()]=[0,0,255]
             cv2.imshow(self.fixedmatrix,self.fixedimg)
@@ -55,9 +59,10 @@ class PointMatching(object):
             if cv2.waitKey(0) & 0xff == 27:
                 cv2.destroyAllWindows()
 
-
+    ''' find key points, above threshold, and saving to array '''
     def arrangePoints(self,fixedm = self.fixedmatrix, movingm = self.movingmatrix, t, a):
-        #finding key points and putting them in an array
+        # t is the type of matrix, fixed or moving
+        # a is WHAT IS A??
         array_points = []
         if t == 'fixed':
             self.fixedmatrix = fixedm
@@ -79,9 +84,14 @@ class PointMatching(object):
                 self.movingarray.append((x[i],y[i]))
 
 
+    ''' makes sure both matricies of points hold the same number of points '''
     def limitPoints(self):
-        #same amount of points for array and matrix
+        #determine how many points should be in each set
         self.numpoints = min(len(self.fixedarray),len(self.movingarray))
+
+        #randomly shuffles points in the array
+        #gets rid of some points form the fixed or moving array to equalize the number of points in each
+
         if len(self.fixedarray)!=len(self.movingarray):
             if len(self.fixedarray)>len(self.movingarray):
                 random.shuffle(self.fixedarray)
@@ -96,9 +106,11 @@ class PointMatching(object):
                 for i in range(0,len(moving_array_bad)):
                     self.movingmatrix[moving_array_bad[i][0]][moving_array_bad[i][1]] = 0
 
-
+    ''' Finds the non-zero points in each array and saves them as pairs '''
     def matchPoints(self):
-        #searching non-zero points
+        #finds point from other array with smallest error between
+        #saves points as a pair in a matrix of point pairs
+
         idx=np.zeros(self.numpoints)
         self.matches = np.zeros(self.numpoints, dtype='(2,2)int8')
         self.errors = np.zeros(self.numpoints)
@@ -114,19 +126,18 @@ class PointMatching(object):
             self.errors[i] = X[int(idx[i])]
             self.matches[i] = [self.movingarray[i],self.fixedarray[int(idx[i])]]
 
+    ''' Run with two maps: fixed is the established map, moving is new map '''
     def run(self):
-        #run with two maps: fixed is the established map, moving is new map
-        #while not rospy.is_shutdown():
         self.findPoints('maze1.pgm','fixed')
         self.arrangePoints('fixed')
         self.findPoints('maze1_2.pgm','moving')
+        cv2.imshow('test', self.movingmatrix)
+        if cv2.waitKey(0) & 0xff == 27:
+            cv2.destroyAllWindows()
         self.arrangePoints('moving')
         self.limitPoints()
-        #NEVER CALLED LIMIT POINTS (I called above), so never set numpoints
-        #working through limitPoints errors now
         self.matchPoints()
         return self.matches, self.errors
-        #self.showPoints('fixed')
 
 
 if __name__ == "__main__":

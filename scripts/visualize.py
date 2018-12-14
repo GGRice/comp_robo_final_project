@@ -12,23 +12,18 @@ class Visualize(object):
 
         self.changed_img = None
 
-
-    def build_img(self):
+    ''' create a matix with black at the interesting points '''
+    def build_img(self, array = self.to_be_img):
         self.changed_img = np.ones((self.width, self.height), np.uint8)
         self.changed_img[:] = 255
 
-        for index in self.to_be_img:
+        for index in array:
             self.changed_img[index[0], index[1]] = 0
 
+        return self.changed_img
 
+    ''' Show an image designated from result of build_img '''
     def show_img(self, name):
         cv2.imshow(name, self.changed_img)
         if cv2.waitKey(0) & 0xff == 27:
             cv2.destroyAllWindows()
-
-    def plot_both(self):
-        '''
-        plot the transformd matrix on the same graph as the fixe
-        will allow us to actually visualize the effectiveness
-        
-        '''

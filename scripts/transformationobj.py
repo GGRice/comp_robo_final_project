@@ -17,7 +17,7 @@ class Transformation(object):
         self.err_thresh = 200
 
 
-    #take x and y changes, add to x and y coords of point
+    ''' Take x and y changes, add to x and y coords of point '''
     def translate(self, move, xchange, ychange):
 
         move[0] += xchange
@@ -25,7 +25,7 @@ class Transformation(object):
 
         return move
 
-    #take an angle, rotate the point that angle
+    ''' Take an angle, rotate the point that angle '''
     def rot(self, move, angle=0 ):
         # perform a random rotation
         theta = angle
@@ -38,66 +38,93 @@ class Transformation(object):
 
         x = moved[0,0]
         y = moved[0,1]
-        r = [x,y]
+        r = [x,y] #ccreates a single array to hold the poiint
 
         return r
 
 
-    #applies transformation trans to points
-    def apply_trans_to_points(self, transform):
+    ''' applies transformation trans to points '''
+    def apply_trans_to_points(self, transform, angle = 0, points = self.points):
         transformed = []
-        xchange, ychange = self.avgdist()
-        for i in range(0,len(self.points)-1):
-            #fix_point = self.points[i][0]
-            move_point = self.points[i][1]
 
-            if transform == 'rotate':
-                changed = self.rot(move_point, np.pi/2)
-            elif transform == 'translate':
-                changed = self.translate(move_point, xchange, ychange)
-            #print(rotated[0])
-            x = int(changed[0])
-            y = int(changed[1])
-            transformed.append((x,y))
+        #find the average distance between x and y
+        xchange, ychange = self.avgdist()
+
+        if points ==self.points: #if not given an array of points, look at the points matrix of point pairs
+            for i in range(0,len(self.points)-1):
+                move_point = self.points[i][1] #find the point to be moved
+
+                #determine if rotate or translate requested
+                if transform == 'rotate':
+                    changed = self.rot(move_point, angle)
+                elif transform == 'translate':
+                    changed = self.translate(move_point, xchange, ychange)
+                x = int(changed[0])
+                y = int(changed[1])
+                transformed.append((x,y))
+        else: #if given array of points
+            for i in range(0,len(points)-1):
+                move_point = points[i]
+
+                if transform == 'rotate':
+                    changed = self.rot(move_point, angle)
+                elif transform == 'translate':
+                    changed = self.translate(move_point, xchange, ychange)
+                x = int(changed[0])
+                y = int(changed[1])
+                transformed.append((x,y))
         return transformed
 
-    #finds avg distance between x points and y points
+
+    ''' Finds avg distance between x points and y points '''
     def avgdist(self):
+        #create empty numpy matrices to hold hte values
         xdiff = np.array(0, dtype=np.int64)
         ydiff = np.array(0, dtype=np.int64)
+
+        #add the differences from every pari of points ot the respective matrix
         for i in self.points:
             np.append(xdiff,i[0][0]-i[1][0])
             np.append(ydiff,i[0][1]-i[1][1])
-            #xdiff.append(i[0][0]-i[1][0])
-            #ydiff.append(i[0][1]-i[1][1])
 
+        #find the avg value f the differences and return
         x_mean = np.mean(xdiff)
         y_mean = np.mean(ydiff)
 
         return x_mean, y_mean
 
-    #applies given transform to given set of points
+
+    ''' Applies given transform to given set of points '''
     def run(self, transform):
         transf = self.apply_trans_to_points(transform)
 
         return transf
 
-    def transform(self, errors):
-        transf = self.apply_trans_to_points('translate')
-
-        
-
+    ''' UNTESTED: Perform ICP '''
+    #if avg error is higher than threshold
+    #translate then rotate random able between 0 and 90
+    #find new points in transoformed matrix
+    #recursive until error is less than threshold
+    def transform(self, errors, viz, pm):
         err = np.mean(errors)
 
-        """
-        translate
-        rotate a random angle <=90
-        check error
-        if error larger than last error, rotate laser_callback
-        once find "min," rotate again to check getting stuck at min
-        keep tab of cumulative rotation so can save the different points to go back to
+        if err > self.err_thresh:
+            transf = self.apply_trans_to_points('translate')
+            rot = self.apply_trans_to_points('rotate', random.uniform(0,np.pi/2), transf)
 
-        """
+            for i in range(0,len(self.points)-1):
+                fix_points.append(self.points[i][0])
+
+            fixed = viz.build_img(fix_points)
+            moving = viz.build_img(rot)
+
+            pm.arrangePoints(fixedm = fixed, movingm = moving, 'moving', len(fixed))
+            pm.limitPoints()
+            pm.matchingPoints()
+
+            transform(pm.errors, viz, pm)
+        else:
+            return moving
 
 
 
