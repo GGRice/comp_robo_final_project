@@ -41,7 +41,7 @@ class PointMatching(object):
             matrix = cv2.cornerHarris(gray,2,3,0.04)
             self.movingmatrix = cv2.dilate(matrix,None)
 
-#receive img and dst
+
     def showPoints(self,t):
         #visualize corner detection
         if t == 'fixed':
@@ -55,7 +55,7 @@ class PointMatching(object):
             if cv2.waitKey(0) & 0xff == 27:
                 cv2.destroyAllWindows()
 
-#redefine fixedmatrix/movingmatrix (matrix) and fixedarray/movingarray (array_points)
+
     def arrangePoints(self,t):
         #finding key points and putting them in an array
         array_points = []
@@ -70,7 +70,7 @@ class PointMatching(object):
             for i in range(0,len(x)):
                 self.movingarray.append((x[i],y[i]))
 
-#should be good
+
     def limitPoints(self):
         #same amount of points for array and matrix
         self.numpoints = min(len(self.fixedarray),len(self.movingarray))
@@ -80,7 +80,7 @@ class PointMatching(object):
                 fixed_array_bad = self.fixedarray[self.numpoints:]
                 self.fixedarray=self.fixedarray[:self.numpoints]
                 for i in range(0,len(fixed_array_bad)):
-                    self.fixed[fixed_array_bad[i]] = 0
+                    self.fixedmatrix[fixed_array_bad[i][0]][fixed_array_bad[i][1]] = 0
             if len(self.fixedarray)<len(self.movingarray):
                 random.shuffle(self.movingarray)
                 moving_array_bad = self.movingarray[self.numpoints:]
@@ -93,20 +93,16 @@ class PointMatching(object):
         #searching non-zero points
         idx=np.zeros(self.numpoints)
         self.matches = np.zeros(self.numpoints, dtype='(2,2)int8')
-        print(self.numpoints)
         for i in range(0,self.numpoints):
-            print(i)
             #iterates through moving_array (new map)
             X = []
             for n in range(0,self.numpoints):
-                print(n)
                 #iterates through fixed_array (established map)
                 #TODO: remove from matching list
                 val = np.subtract(np.square(self.movingarray[i]),np.square(self.fixedarray[n]))    #gets hypotenuse
                 X.append(np.square(val[0]+val[1]))                                             #square of error distance appended to X
             idx[i] = int(np.where(X == min(X))[0][0]) #found closest interesting point
             self.matches[i] = [self.movingarray[i],self.fixedarray[int(idx[i])]]
-            print(self.matches[i])
 
 
     def run(self):
@@ -120,8 +116,8 @@ class PointMatching(object):
         #NEVER CALLED LIMIT POINTS (I called above), so never set numpoints
         #working through limitPoints errors now
         self.matchPoints()
-        return self.matches
-        #showPoints(imgfixed,fixed)
+        #return self.matches
+        self.showPoints('fixed')
 
 
 if __name__ == "__main__":
