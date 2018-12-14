@@ -93,6 +93,7 @@ class PointMatching(object):
         #searching non-zero points
         idx=np.zeros(self.numpoints)
         self.matches = np.zeros(self.numpoints, dtype='(2,2)int8')
+        self.errors = np.zeros(self.numpoints)
         for i in range(0,self.numpoints):
             #iterates through moving_array (new map)
             X = []
@@ -102,6 +103,7 @@ class PointMatching(object):
                 val = np.subtract(self.movingarray[i],self.fixedarray[n])    #gets hypotenuse
                 X.append(np.square(val[0])+np.square(val[1]))                                             #square of error distance appended to X
             idx[i] = int(np.where(X == min(X))[0][0]) #found closest interesting point
+            self.errors[i] = X[int(idx[i])]
             self.matches[i] = [self.movingarray[i],self.fixedarray[int(idx[i])]]
 
     def run(self):
@@ -115,12 +117,13 @@ class PointMatching(object):
         #NEVER CALLED LIMIT POINTS (I called above), so never set numpoints
         #working through limitPoints errors now
         self.matchPoints()
-        return self.matches
+        return self.matches, self.errors
         #self.showPoints('fixed')
 
 
 if __name__ == "__main__":
     P=PointMatching()
-    matches = P.run()
-    print(matches)
+    matches, errors = P.run()
+    print(errors)
+    print(np.mean(errors))
     time.sleep(10)

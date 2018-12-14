@@ -8,12 +8,13 @@ import random
 import rospy
 import cv2
 from cornerfinder import matchPoints
-#import visualize
+from point_matching import PointMatching
+from visualize import Visualize
 
 class Transformation(object):
-    def __init__(self, points, transform):
+    def __init__(self, points):
         self.points = points
-        self.transform = transform #'rotate' or 'translate'
+        self.err_thresh = 200
 
 
     #take x and y changes, add to x and y coords of point
@@ -43,16 +44,16 @@ class Transformation(object):
 
 
     #applies transformation trans to points
-    def apply_trans_to_points(self):
+    def apply_trans_to_points(self, transform):
         transformed = []
         xchange, ychange = self.avgdist()
-        for i in range(0,len(a)-1):
+        for i in range(0,len(self.points)-1):
             #fix_point = self.points[i][0]
             move_point = self.points[i][1]
 
-            if self.transform == 'rotate':
+            if transform == 'rotate':
                 changed = self.rot(move_point, np.pi/2)
-            elif self.transform == 'translate':
+            elif transform == 'translate':
                 changed = self.translate(move_point, xchange, ychange)
             #print(rotated[0])
             x = int(changed[0])
@@ -76,88 +77,42 @@ class Transformation(object):
         return x_mean, y_mean
 
     #applies given transform to given set of points
-    def run(self):
-        transf = self.apply_trans_to_points()
+    def run(self, transform):
+        transf = self.apply_trans_to_points(transform)
 
         return transf
 
+    def transform(self, errors):
+        transf = self.apply_trans_to_points('translate')
 
-class Visualize(object):
-    def __init__(self, matrix):
-        self.to_be_img = matrix
-        self.width = 200
-        self.height = 200
+        
 
-        self.changed_img = None
+        err = np.mean(errors)
 
+        """
+        translate
+        rotate a random angle <=90
+        check error
+        if error larger than last error, rotate laser_callback
+        once find "min," rotate again to check getting stuck at min
+        keep tab of cumulative rotation so can save the different points to go back to
 
-    def build_img(self):
-        self.changed_img = np.ones((self.width, self.height), np.uint8)
-        self.changed_img[:] = 255
-
-        for index in self.to_be_img:
-            self.changed_img[index[0], index[1]] = 0
-
-
-    def show_img(self, name):
-        cv2.imshow(name, self.changed_img)
-        if cv2.waitKey(0) & 0xff == 27:
-            cv2.destroyAllWindows()
+        """
 
 
 
-
-def findPoints(filename):
-    #TODO: fix long distance noise being picked
-    #img = cv2.imread(filename)
-    img = filename
-    #gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    gray = np.float32(img)
-    dst = cv2.cornerHarris(gray,2,3,0.04)
-    #result is dilated for marking the corners, not important
-    dst = cv2.dilate(dst,None)
-    return img,dst
-
-
-def arrangePoints(matrix):
-    #finding nonzeros
-    array_points = []
-    matrix[matrix<=0.01*matrix.max()]=0
-    x,y = np.where(matrix > 0.01*matrix.max())
-    for i in range(0,len(x)):
-        array_points.append((x[i],y[i]))
-    return array_points, matrix
-
-def image(img):
-    #adress = '../'
-    return cv2.imread(img, 0)
 
 if __name__ == "__main__":
 
-    m1 = image('maze1.jpg')
-    m2 = image('maze1_2.pgm')
+    matching_points = PointMatching()
+    matches, errors = matching_points.run()
+
+    type = 'rotate' #rotate or translate
 
 
-    crop_img1 = m1[920:1120, 920:1120]
-    crop_img2 = m2[920:1120, 920:1120]
+    tran = Transformation(matches)
 
-    #show_img('map2',crop_img2)
-
-    imgfixed,fixed = findPoints(crop_img1)
-    fixed_array, fixedzeros = arrangePoints(fixed)
-
-    imgmoving,moving = findPoints(crop_img2)
-    moving_array, fixedzeros = arrangePoints(moving)
-
-    a = matchPoints(fixed, moving,fixed_array, moving_array)
-
-
-    type = 'translate' #rotate or translate
-
-
-    tran = Transformation(a, type)
-
-    transf = tran.run()
+    transf = tran.run(type)
 
     viz = Visualize(transf)
 

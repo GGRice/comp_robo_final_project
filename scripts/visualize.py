@@ -4,7 +4,7 @@
 import numpy as np
 import cv2
 
-class Vizualize(object):
+class Visualize(object):
     def __init__(self, matrix):
         self.to_be_img = matrix
         self.width = 200
@@ -14,7 +14,7 @@ class Vizualize(object):
 
 
     def build_img(self):
-        self.changed_img = np.ones(self.width, self.height, np.uint8)
+        self.changed_img = np.ones((self.width, self.height), np.uint8)
         self.changed_img[:] = 255
 
         for index in self.to_be_img:
@@ -25,3 +25,10 @@ class Vizualize(object):
         cv2.imshow(name, self.changed_img)
         if cv2.waitKey(0) & 0xff == 27:
             cv2.destroyAllWindows()
+
+    def plot_both(self):
+        '''
+        plot the transformd matrix on the same graph as the fixe
+        will allow us to actually visualize the effectiveness
+        
+        '''
