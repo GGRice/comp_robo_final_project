@@ -28,7 +28,7 @@ def translate(move, xchange, ychange):
     move[0] += xchange
     move[1] += ychange
 
-    return Y
+    return move
 
 
 def rot( move, angle=0 ):
@@ -72,7 +72,7 @@ def arrangePoints(matrix):
 
 def apply_trans_to_points(trans, a):
     transformed = []
-    xchange, ychange = com(points)
+    xchange, ychange = com(a)
     for i in range(0,len(a)-1):
         #fix_point = a[i][0]
         move_point = a[i][1]
@@ -128,7 +128,7 @@ m2 = image('maze1_2.pgm')
 crop_img1 = m1[920:1120, 920:1120]
 crop_img2 = m2[920:1120, 920:1120]
 
-#show_img('map2',crop_img2)
+show_img('map2',crop_img2)
 
 imgfixed,fixed = findPoints(crop_img1)
 fixed_array, fixedzeros = arrangePoints(fixed)
@@ -139,7 +139,7 @@ moving_array, fixedzeros = arrangePoints(moving)
 a = matchPoints(fixed, moving,fixed_array, moving_array)
 
 
-type = 'translate' #rotate or translate
+type = 'rotate' #rotate or translate
 transf = apply_trans_to_points(type,a)
 
 changed_img = build_img(transf, crop_img1)

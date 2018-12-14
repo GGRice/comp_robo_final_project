@@ -101,11 +101,12 @@ class Transformation(object):
         return transf
 
     ''' UNTESTED: Perform ICP '''
-    #if avg error is higher than threshold
-    #translate then rotate random able between 0 and 90
-    #find new points in transoformed matrix
-    #recursive until error is less than threshold
-    def transform(self, errors, viz, pm):
+    def icp(self, errors, viz, pm):
+        #if avg error is higher than threshold
+        #translate then rotate random able between 0 and 90
+        #find new points in transoformed matrix
+        #recursive until error is less than threshold
+
         err = np.mean(errors)
 
         if err > self.err_thresh:
@@ -122,7 +123,7 @@ class Transformation(object):
             pm.limitPoints()
             pm.matchingPoints()
 
-            transform(pm.errors, viz, pm)
+            icp(pm.errors, viz, pm)
         else:
             return moving
 
