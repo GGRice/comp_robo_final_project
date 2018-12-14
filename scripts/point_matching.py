@@ -56,17 +56,25 @@ class PointMatching(object):
                 cv2.destroyAllWindows()
 
 
-    def arrangePoints(self,t):
+    def arrangePoints(self,fixedm = self.fixedmatrix, movingm = self.movingmatrix, t, a):
         #finding key points and putting them in an array
         array_points = []
         if t == 'fixed':
-            self.fixedmatrix[self.fixedmatrix<=0.01*self.fixedmatrix.max()]=0
-            x,y = np.where(self.fixedmatrix > 0.01*self.fixedmatrix.max())
+            self.fixedmatrix = fixedm
+            if a>0:
+                self.fixedmatrix[self.fixedmatrix<=0.01*self.fixedmatrix.max()]=0
+                x,y = np.where(self.fixedmatrix > 0.01*self.fixedmatrix.max())
+            else:
+                x,y = np.where(self.fixedmatrix > 0)
             for i in range(0,len(x)):
                 self.fixedarray.append((x[i],y[i]))
         elif t == 'moving':
-            self.movingmatrix[self.movingmatrix<=0.01*self.movingmatrix.max()]=0
-            x,y = np.where(self.movingmatrix > 0.01*self.movingmatrix.max())
+            self.movingmatrix = movingm
+            if a>0:
+                self.movingmatrix[self.movingmatrix<=0.01*self.movingmatrix.max()]=0
+                x,y = np.where(self.movingmatrix > 0.01*self.movingmatrix.max())
+            else:
+                x,y = np.where(self.movingmatrix > 0)
             for i in range(0,len(x)):
                 self.movingarray.append((x[i],y[i]))
 
