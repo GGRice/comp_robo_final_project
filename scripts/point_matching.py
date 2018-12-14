@@ -86,7 +86,7 @@ class PointMatching(object):
                 moving_array_bad = self.movingarray[self.numpoints:]
                 self.movingarray=self.movingarray[:self.numpoints]
                 for i in range(0,len(moving_array_bad)):
-                    self.moving[moving_array_bad[i]] = 0
+                    self.movingmatrix[moving_array_bad[i][0]][moving_array_bad[i][1]] = 0
 
 
     def matchPoints(self):
@@ -99,11 +99,10 @@ class PointMatching(object):
             for n in range(0,self.numpoints):
                 #iterates through fixed_array (established map)
                 #TODO: remove from matching list
-                val = np.subtract(np.square(self.movingarray[i]),np.square(self.fixedarray[n]))    #gets hypotenuse
-                X.append(np.square(val[0]+val[1]))                                             #square of error distance appended to X
+                val = np.subtract(self.movingarray[i],self.fixedarray[n])    #gets hypotenuse
+                X.append(np.square(val[0])+np.square(val[1]))                                             #square of error distance appended to X
             idx[i] = int(np.where(X == min(X))[0][0]) #found closest interesting point
             self.matches[i] = [self.movingarray[i],self.fixedarray[int(idx[i])]]
-
 
     def run(self):
         #run with two maps: fixed is the established map, moving is new map
@@ -116,12 +115,12 @@ class PointMatching(object):
         #NEVER CALLED LIMIT POINTS (I called above), so never set numpoints
         #working through limitPoints errors now
         self.matchPoints()
-        #return self.matches
-        self.showPoints('fixed')
+        return self.matches
+        #self.showPoints('fixed')
 
 
 if __name__ == "__main__":
     P=PointMatching()
-    matching = P.run()
-    print(matching)
-    time.sleep(30)
+    matches = P.run()
+    print(matches)
+    time.sleep(10)
