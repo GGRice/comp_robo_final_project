@@ -44,8 +44,11 @@ class Transformation(object):
 
 
     ''' applies transformation trans to points '''
-    def apply_trans_to_points(self, transform, angle = 0, points = self.points):
+    def apply_trans_to_points(self, transform, angle = 0, points = None):
         transformed = []
+
+        if points == None:
+            points = self.points
 
         #find the average distance between x and y
         xchange, ychange = self.avgdist()
@@ -119,7 +122,7 @@ class Transformation(object):
             fixed = viz.build_img(fix_points)
             moving = viz.build_img(rot)
 
-            pm.arrangePoints(fixedm = fixed, movingm = moving, 'moving', len(fixed))
+            pm.arrangePoints('moving', len(fixed), fixedm = fixed, movingm = moving)
             pm.limitPoints()
             pm.matchingPoints()
 

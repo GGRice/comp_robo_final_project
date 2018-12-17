@@ -13,7 +13,11 @@ class Visualize(object):
         self.changed_img = None
 
     ''' create a matix with black at the interesting points '''
-    def build_img(self, array = self.to_be_img):
+    def build_img(self, array = None):
+
+        if array == None:
+            arry = self.to_be_img
+            
         self.changed_img = np.ones((self.width, self.height), np.uint8)
         self.changed_img[:] = 255
 

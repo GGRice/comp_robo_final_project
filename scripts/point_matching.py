@@ -23,7 +23,7 @@ class PointMatching(object):
         self.matches = []
 #fix shit with passing into functions
 
-    ''' Run corner detection to find important points ''''
+    ''' Run corner detection to find important points '''
     def findPoints(self,filename, t):
         #want to created different variables for fixed or moving array
 
@@ -60,9 +60,15 @@ class PointMatching(object):
                 cv2.destroyAllWindows()
 
     ''' find key points, above threshold, and saving to array '''
-    def arrangePoints(self,fixedm = self.fixedmatrix, movingm = self.movingmatrix, t, a):
+    def arrangePoints(self, t, a, fixedm = None, movingm = None):
         # t is the type of matrix, fixed or moving
         # a is WHAT IS A??
+
+        if fixedm == None:
+            fixedm = self.fixedmatrix
+        if movingm == None:
+            movingm = self.movingmatrix
+
         array_points = []
         if t == 'fixed':
             self.fixedmatrix = fixedm
@@ -129,12 +135,10 @@ class PointMatching(object):
     ''' Run with two maps: fixed is the established map, moving is new map '''
     def run(self):
         self.findPoints('maze1.pgm','fixed')
-        self.arrangePoints('fixed')
+        self.arrangePoints('fixed', 5)
         self.findPoints('maze1_2.pgm','moving')
         cv2.imshow('test', self.movingmatrix)
-        if cv2.waitKey(0) & 0xff == 27:
-            cv2.destroyAllWindows()
-        self.arrangePoints('moving')
+        self.arrangePoints('moving', 5)
         self.limitPoints()
         self.matchPoints()
         return self.matches, self.errors
